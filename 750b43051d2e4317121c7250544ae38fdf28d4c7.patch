@@ -1,0 +1,24 @@
+From 750b43051d2e4317121c7250544ae38fdf28d4c7 Mon Sep 17 00:00:00 2001
+From: zzh-zzh-zzh <1292882190@qq.com>
+Date: Fri, 10 Feb 2023 23:09:44 +0800
+Subject: [PATCH] kernel/module.c: Ignore symbols crc check
+
+Change-Id: I1ec2933c8bf1ffd970a6c07fbe8b56636d67825f
+Signed-off-by: lateautumn233 <lateautumn233@foxmail.com>
+---
+ kernel/module.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/module.c b/kernel/module.c
+index 93fade94f108..55207b026c4a 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1354,7 +1354,7 @@ static int check_version(const struct load_info *info,
+ bad_version:
+ 	pr_warn("%s: disagrees about version of symbol %s\n",
+ 	       info->name, symname);
+-	return 0;
++	return 1;
+ }
+ 
+ static inline int check_modstruct_version(const struct load_info *info,
