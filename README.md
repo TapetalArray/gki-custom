@@ -13,7 +13,7 @@ repo sync
 cd ..
 
 # Clone this repo
-git clone repo-link
+git clone https://github.com/TapetalArray/gki-lxc
 
 # Apply patches and configuration files
 cp ./gki-lxc/gki_defconfig ./android-kernel/common/arch/arm64/configs/gki_defconfig
