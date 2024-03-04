@@ -1,6 +1,6 @@
 # GKI LXC
 
-Enable LXC support for gki kernel, everything comes from [Common-Android-Kernel-Tree](https://github.com/lateautumn233/Common-Android-Kernel-Tree), base [android12-5.10-2023-05](https://source.android.com/docs/core/architecture/kernel/gki-android12-5_10-release-builds#may-2023-releases)
+Enable LXC support for gki kernel, everything comes from [Common-Android-Kernel-Tree](https://github.com/lateautumn233/Common-Android-Kernel-Tree), Based on [android12-5.10-2023-05](https://source.android.com/docs/core/architecture/kernel/gki-android12-5_10-release-builds#may-2023-releases)
 
 # Build
 
