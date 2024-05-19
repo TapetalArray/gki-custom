@@ -8,7 +8,7 @@ Build reference [KernelSU](https://kernelsu.org/guide/how-to-build.html)
 ```bash
 # Sync the kernel source code
 mkdir android-kernel ; cd android-kernel
-repo init --depth 1 -u https://android.googlesource.com/kernel/manifest -b BRANCH
+repo init --depth 1 -u https://android.googlesource.com/kernel/manifest -b [BRANCH]
 repo sync
 
 # Clone this repo
