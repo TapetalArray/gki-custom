@@ -4,9 +4,10 @@ Enable LXC support for gki kernel, everything comes from [Common-Android-Kernel-
 
 # Build
 
+Sync the kernel source code
+
 Build reference [KernelSU](https://kernelsu.org/guide/how-to-build.html)
 ```bash
-# Sync the kernel source code
 mkdir android-kernel; cd android-kernel
 repo init --depth 1 -u https://android.googlesource.com/kernel/manifest -b [BRANCH]
 repo sync
@@ -29,8 +30,10 @@ Build
 LTO=thin BUILD_CONFIG=common/build.config.gki.aarch64 build/build.sh
 ```
 
-Create img file
-raw compression format
+Create the img file
+
+Compression format: raw
+
 Download boot from [this](https://source.android.com/docs/core/architecture/kernel/gki-android12-5_10-release-builds)
 ```bash
 ./tools/mkbootimg/unpack_bootimg.py --boot_img ../boot-5.10-xxxx.img
