@@ -15,7 +15,7 @@ repo sync
 
 Clone this repo
 ```bash
-git clone https://github.com/TapetalArray/gki-lxc
+git clone https://github.com/TapetalArray/GKI-Custom
 ```
 
 Apply patches and configuration files
