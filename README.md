@@ -20,9 +20,9 @@ git clone https://github.com/TapetalArray/gki-lxc
 
 Apply patches and configuration files
 ```bash
-cp ./gki-lxc/gki_defconfig ./android-kernel/common/arch/arm64/configs/gki_defconfig
+cp ./GKI-Custom/gki_defconfig ./android-kernel/common/arch/arm64/configs/gki_defconfig
 cd android-kernel/common
-git apply ../../gki-lxc/*.patch
+git apply ../../GKI-Custom/patchs/*.patch
 ```
 
 Build
