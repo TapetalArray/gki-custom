@@ -9,6 +9,12 @@ on:
         description: >
           Patch level of common kernel manifest,
           for example: 2021-11
+      version_name:
+        required: true
+        type: string
+        description: >
+          With SUBLEVEL of kernel,
+          for example: android12-5.10.66
 
 jobs:
   build:
@@ -61,5 +67,5 @@ jobs:
     - name: Upload Image and Image.gz
       uses: actions/upload-artifact@v4
       with:
-        name: Image-android12-5.10_${{ inputs.os_patch_level }}
+        name: Image-${{ inputs.version_name }}_${{ inputs.os_patch_level }}
         path: ./output/*
