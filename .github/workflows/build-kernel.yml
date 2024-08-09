@@ -28,40 +28,38 @@ jobs:
       run: |
         sudo apt install repo -y
 
-    - name: Create build folder
-      run: |
-        mkdir android-kernel
-        cd android-kernel
-
     - name: Sync the kernel source code
       run: |
+        cd $GITHUB_WORKSPACE
+        mkdir android-kernel
+        cd android-kernel
         repo init --depth 1 -u https://android.googlesource.com/kernel/manifest -b common-android12-5.10-${{ inputs.os_patch_level }}
         repo sync
 
     - name: Clone this repo
       run: |
-        cd ..
+        cd $GITHUB_WORKSPACE
         git clone https://github.com/TapetalArray/GKI-Custom.git gki-patch
 
     - name: Apply patches and configuration files
       run: |
-        cp ./gki-patch/gki_defconfig ./android-kernel/common/arch/arm64/configs/gki_defconfig
-        cd android-kernel/common
-        git apply ../../gki-patch/patchs/*.patch
-        cd ..
+        cp $GITHUB_WORKSPACE/gki-patch/gki_defconfig $GITHUB_WORKSPACE/android-kernel/common/arch/arm64/configs/gki_defconfig
+        cd $GITHUB_WORKSPACE/android-kernel/common
+        git apply $GITHUB_WORKSPACE/gki-patch/patchs/*.patch
 
     - name: Build Kernel
       run: |
+        cd $GITHUB_WORKSPACE/android-kernel
         LTO=thin BUILD_CONFIG=common/build.config.gki.aarch64 build/build.sh
 
     - name: Prepare artifacts
       id: prepareArtifacts
       run: |
-        cd ..
+        cd $GITHUB_WORKSPACE
         OUTDIR=android-kernel/out/android12-5.10/dist
         mkdir output
-        cp $OUTDIR/Image ./output/
-        cp $OUTDIR/Image.lz4 ./output/
+        cp $OUTDIR/Image $GITHUB_WORKSPACE/output/
+        cp $OUTDIR/Image.lz4 $GITHUB_WORKSPACE/output/
 
     - name: Upload Image and Image.gz
       uses: actions/upload-artifact@v4
