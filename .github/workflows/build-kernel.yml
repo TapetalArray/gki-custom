@@ -18,12 +18,10 @@ jobs:
     - name: Build GKI 5.10 with Custom
       uses: actions/checkout@v4
 
-    - name: Create build folder
+    - name: Setup repo
       run: |
-        mkdir -p ~/.bin
-        export PATH="${HOME}/.bin:${PATH}"
-        curl https://storage.googleapis.com/git-repo-downloads/repo > ~/.bin/repo
-        chmod a+rx ~/.bin/repo
+        curl https://storage.googleapis.com/git-repo-downloads/repo > ./repo
+        chmod a+rx ./repo
 
     - name: Create build folder
       run: |
@@ -32,8 +30,8 @@ jobs:
 
     - name: Sync the kernel source code
       run: |
-        repo init --depth 1 -u https://android.googlesource.com/kernel/manifest -b common-android12-5.10-${{ inputs.os_patch_level }}
-        repo sync -j$(cproc --all)
+        ../repo init --depth 1 -u https://android.googlesource.com/kernel/manifest -b common-android12-5.10-${{ inputs.os_patch_level }}
+        ../repo sync -j$(cproc --all)
 
     - name: Clone this repo
       run: |
