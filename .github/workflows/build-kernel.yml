@@ -41,13 +41,13 @@ jobs:
     - name: Clone this repo
       run: |
         cd ..
-        git clone https://github.com/TapetalArray/GKI-Custom.git
+        git clone https://github.com/TapetalArray/GKI-Custom.git gki-patch
 
     - name: Apply patches and configuration files
       run: |
-        cp ./GKI-Custom/gki_defconfig ./android-kernel/common/arch/arm64/configs/gki_defconfig
+        cp ./gki-patch/gki_defconfig ./android-kernel/common/arch/arm64/configs/gki_defconfig
         cd android-kernel/common
-        git apply ../../GKI-Custom/patchs/*.patch
+        git apply ../../gki-patch/patchs/*.patch
         cd ..
 
     - name: Build Kernel
