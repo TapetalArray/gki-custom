@@ -26,8 +26,7 @@ jobs:
 
     - name: Setup repo
       run: |
-        curl https://storage.googleapis.com/git-repo-downloads/repo > ./repo
-        chmod a+rx ./repo
+        sudo apt install repo -y
 
     - name: Create build folder
       run: |
@@ -36,8 +35,8 @@ jobs:
 
     - name: Sync the kernel source code
       run: |
-        ../repo init --depth 1 -u https://android.googlesource.com/kernel/manifest -b common-android12-5.10-${{ inputs.os_patch_level }}
-        ../repo sync -j$(cproc --all)
+        repo init --depth 1 -u https://android.googlesource.com/kernel/manifest -b common-android12-5.10-${{ inputs.os_patch_level }}
+        repo sync -j$(cproc --all)
 
     - name: Clone this repo
       run: |
