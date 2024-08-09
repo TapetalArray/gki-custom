@@ -1,36 +1,60 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Build-GKI-5.10-Custom
 
-# Controls when the workflow will run
 on: 
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      os_patch_level:
+        required: true
+        type: string
+        description: >
+          Patch level of common kernel manifest,
+          for example: 2021-11
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+    - name: Build GKI 5.10 with Custom
+      uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+    - name: Create build folder
+      run: |
+        mkdir android-kernel
+        cd android-kernel
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+    - name: Sync the kernel source code
+      run: |
+        repo init --depth 1 -u https://android.googlesource.com/kernel/manifest -b common-android12-5.10-${{ inputs.os_patch_level }}
+        repo sync -j$(cproc --all)
+
+    - name: Clone this repo
+      run: |
+        cd ..
+        git clone https://github.com/TapetalArray/GKI-Custom.git
+
+    - name: Apply patches and configuration files
+      run: |
+        cp ./GKI-Custom/gki_defconfig ./android-kernel/common/arch/arm64/configs/gki_defconfig
+        cd android-kernel/common
+        git apply ../../GKI-Custom/patchs/*.patch
+        cd ..
+
+    - name: Build Kernel
+      run: |
+        LTO=thin BUILD_CONFIG=common/build.config.gki.aarch64 build/build.sh
+
+    - name: Prepare artifacts
+      id: prepareArtifacts
+      run: |
+        cd ..
+        OUTDIR=android-kernel/out/android12-5.10/dist
+        mkdir output
+        cp $OUTDIR/Image ./output/
+        cp $OUTDIR/Image.lz4 ./output/
+
+    - name: Upload Image and Image.gz
+      uses: actions/upload-artifact@v4
+      with:
+        name: Image-android12-5.10_${{ inputs.os_patch_level }}
+        path: ./output/*
