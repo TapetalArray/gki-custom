@@ -36,7 +36,7 @@ jobs:
     - name: Sync the kernel source code
       run: |
         repo init --depth 1 -u https://android.googlesource.com/kernel/manifest -b common-android12-5.10-${{ inputs.os_patch_level }}
-        repo sync -j$(cproc --all)
+        repo sync
 
     - name: Clone this repo
       run: |
