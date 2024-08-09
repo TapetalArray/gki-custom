@@ -15,6 +15,12 @@ on:
         description: >
           With SUBLEVEL of kernel,
           for example: android12-5.10.66
+      kernelsu:
+        required: true
+        type: boolean
+        description: >
+          Build kernel with KernelSU,
+          for example: true/false
 
 jobs:
   build:
@@ -47,9 +53,16 @@ jobs:
         cd $GITHUB_WORKSPACE/android-kernel/common
         git apply $GITHUB_WORKSPACE/gki-patch/patchs/*.patch
 
+    - name: KernelSU
+      if: ${{ inputs.kernelsu == true }}
+      run: |
+          cd $GITHUB_WORKSPACE/android-kernel
+          curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
+
     - name: Build Kernel
       run: |
         cd $GITHUB_WORKSPACE/android-kernel
+        BUILD_CONFIG=common/build.config.gki.aarch64 build/config.sh savedefconfig
         LTO=thin BUILD_CONFIG=common/build.config.gki.aarch64 build/build.sh
 
     - name: Prepare artifacts
