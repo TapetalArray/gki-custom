@@ -20,6 +20,13 @@ jobs:
 
     - name: Create build folder
       run: |
+        mkdir -p ~/.bin
+        export PATH="${HOME}/.bin:${PATH}"
+        curl https://storage.googleapis.com/git-repo-downloads/repo > ~/.bin/repo
+        chmod a+rx ~/.bin/repo
+
+    - name: Create build folder
+      run: |
         mkdir android-kernel
         cd android-kernel
 
