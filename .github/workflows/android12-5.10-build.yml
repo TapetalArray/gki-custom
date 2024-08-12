@@ -48,7 +48,7 @@ jobs:
     - name: Apply patches and configuration files
       run: |
         cd $GITHUB_WORKSPACE
-        cp ./gki-patch/gki_defconfig-android12-5.10 ./android-kernel/common/arch/arm64/configs/gki_defconfig
+        cp ./gki-patch/config/gki_defconfig-android12-5.10 ./android-kernel/common/arch/arm64/configs/gki_defconfig
         cd ./android-kernel/common
         git apply $GITHUB_WORKSPACE/gki-patch/patchs/*.patch
 

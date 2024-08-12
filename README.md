@@ -23,7 +23,7 @@ git clone https://github.com/TapetalArray/GKI-Custom
 Apply patches and configuration files.
 
 ```bash
-cp ./GKI-Custom/gki_defconfig-android12-5.10 ./android-kernel/common/arch/arm64/configs/gki_defconfig
+cp ./GKI-Custom/config/gki_defconfig-android12-5.10 ./android-kernel/common/arch/arm64/configs/gki_defconfig
 cd android-kernel/common
 git apply ../../GKI-Custom/patchs/*.patch
 ```
