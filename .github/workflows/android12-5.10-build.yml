@@ -1,0 +1,103 @@
+name: Android12-5.10-Custom
+
+on: 
+  workflow_dispatch:
+    inputs:
+      os_patch_level:
+        required: true
+        type: string
+        description: >
+          Patch level of common kernel manifest,
+          for example: 2021-11
+      version_name:
+        required: true
+        type: string
+        description: >
+          With SUBLEVEL of kernel,
+          for example: android12-5.10.66
+      kernelsu:
+        required: true
+        type: boolean
+        description: >
+          Build kernel with KernelSU
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Dependencies
+      run: |
+        sudo apt install repo wget -y
+
+    - name: Sync the kernel source code
+      run: |
+        cd $GITHUB_WORKSPACE
+        mkdir android-kernel
+        cd android-kernel
+        repo init --depth 1 -u https://android.googlesource.com/kernel/manifest -b common-android12-5.10-${{ inputs.os_patch_level }}
+        repo sync
+
+    - name: Clone this repo
+      run: |
+        cd $GITHUB_WORKSPACE
+        git clone https://github.com/TapetalArray/GKI-Custom.git gki-patch
+
+    - name: Apply patches and configuration files
+      run: |
+        cd $GITHUB_WORKSPACE
+        cp ./gki-patch/gki_defconfig-android12-5.10 ./android-kernel/common/arch/arm64/configs/gki_defconfig
+        cd ./android-kernel/common
+        git apply $GITHUB_WORKSPACE/gki-patch/patchs/*.patch
+
+    - name: KernelSU
+      if: ${{ inputs.kernelsu == true }}
+      run: |
+          cd $GITHUB_WORKSPACE/android-kernel
+          curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
+
+    - name: Build Kernel
+      run: |
+        cd $GITHUB_WORKSPACE/android-kernel
+        BUILD_CONFIG=common/build.config.gki.aarch64 build/config.sh savedefconfig
+        LTO=thin BUILD_CONFIG=common/build.config.gki.aarch64 build/build.sh
+
+    - name: Prepare artifacts
+      id: prepareArtifacts
+      run: |
+        cd $GITHUB_WORKSPACE
+        OUTDIR=android-kernel/out/android12-5.10/dist
+        mkdir output
+        cp $OUTDIR/Image ./output/
+        cp $OUTDIR/Image.lz4 ./output/
+        cp $OUTDIR/Image ./
+        gzip -n -k -f -9 Image >Image.gz
+        git clone https://github.com/Kernel-SU/AnyKernel3
+        rm -rf ./AnyKernel3/.git
+        cp $OUTDIR/Image ./AnyKernel3/
+        wget https://dl.google.com/android/gki/gki-certified-boot-android12-5.10-${{ inputs.os_patch_level }}_r1.zip -O ./gki-kernel.zip
+        unzip -q ./gki-kernel.zip
+        rm ./gki-kernel.zip
+        cd $GITHUB_WORKSPACE/android-kernel
+        echo "Unpack boot"
+        ./tools/mkbootimg/unpack_bootimg.py --boot_img $GITHUB_WORKSPACE/boot*.img
+        echo "Build boot.img"
+        ./tools/mkbootimg/mkbootimg.py --header_version 4 --kernel out/android12-5.10/dist/Image --ramdisk out/ramdisk --os_version 12.0.0 --os_patch_level ${{ inputs.os_patch_level }} -o $GITHUB_WORKSPACE/output/${{ inputs.version_name }}_${{ inputs.os_patch_level }}-boot.img
+        echo "Build boot-lz4.img"
+        ./tools/mkbootimg/mkbootimg.py --header_version 4 --kernel out/android12-5.10/dist/Image.lz4 --ramdisk out/ramdisk --os_version 12.0.0 --os_patch_level ${{ inputs.os_patch_level }} -o $GITHUB_WORKSPACE/output/${{ inputs.version_name }}_${{ inputs.os_patch_level }}-boot-lz4.img
+        echo "Build boot-gz.img"
+        ./tools/mkbootimg/mkbootimg.py --header_version 4 --kernel $GITHUB_WORKSPACE/Image.gz --ramdisk out/ramdisk --os_version 12.0.0 --os_patch_level ${{ inputs.os_patch_level }} -o $GITHUB_WORKSPACE/output/${{ inputs.version_name }}_${{ inputs.os_patch_level }}-boot-gz.img
+
+    - name: Upload Image and Image.gz and boot.img
+      uses: actions/upload-artifact@v4
+      with:
+        name: Image-${{ inputs.version_name }}_${{ inputs.os_patch_level }}
+        path: ./output/*
+
+    - name: Upload AnyKernel3
+      uses: actions/upload-artifact@v4
+      with:
+        name: AnyKernel3-${{ inputs.version_name }}_${{ inputs.os_patch_level }}
+        path: ./AnyKernel3/*
