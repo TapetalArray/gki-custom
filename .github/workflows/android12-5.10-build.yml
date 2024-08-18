@@ -15,11 +15,6 @@ on:
         description: >
           With SUBLEVEL of kernel,
           for example: android12-5.10.66
-      kernelsu:
-        required: true
-        type: boolean
-        description: >
-          Build kernel with KernelSU
 
 jobs:
   build:
