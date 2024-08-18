@@ -1,4 +1,4 @@
-name: Android12-5.10-Custom
+name: Android12-5.10-Build
 
 on: 
   workflow_dispatch:
