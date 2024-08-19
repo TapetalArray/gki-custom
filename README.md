@@ -1,12 +1,12 @@
 # GKI Custom
 
-Enable LXC, Docker support for GKI Kernel, everything comes from [Common-Android-Kernel-Tree](https://github.com/lateautumn233/Common-Android-Kernel-Tree).
+Enable LXC, Docker support for GKI Kernel, everything comes from [Common-Android-Kernel-Tree](https://github.com/lateautumn233/Common-Android-Kernel-Tree)
 
 # Build
 
-If you don't want to build it yourself, you can jump to the [actions](https://github.com/TapetalArray/GKI-Custom/actions) to download or run a new workflow.
+If you don't want to build it yourself, you can jump to the [actions](https://github.com/TapetalArray/GKI-Custom/actions) to download or run a new workflow
 
-Sync the kernel source code, Build reference [KernelSU](https://kernelsu.org/guide/how-to-build.html).
+Sync the kernel source code, Build reference [KernelSU](https://kernelsu.org/guide/how-to-build.html)
 
 ```bash
 mkdir android-kernel; cd android-kernel
@@ -14,13 +14,13 @@ repo init --depth 1 -u https://android.googlesource.com/kernel/manifest -b [BRAN
 repo sync
 ```
 
-Clone this repo.
+Clone this repo
 
 ```bash
 git clone https://github.com/TapetalArray/GKI-Custom
 ```
 
-Apply patches and configuration files.
+Apply patches and configuration files
 
 ```bash
 cp ./GKI-Custom/config/gki_defconfig-android12-5.10 ./android-kernel/common/arch/arm64/configs/gki_defconfig
@@ -28,7 +28,7 @@ cd android-kernel/common
 git apply ../../GKI-Custom/patchs/*.patch
 ```
 
-Build for build.sh
+Build
 
 ```bash
 LTO=thin BUILD_CONFIG=common/build.config.gki.aarch64 build/build.sh
