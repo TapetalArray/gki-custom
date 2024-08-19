@@ -15,11 +15,16 @@ on:
         description: >
           With SUBLEVEL of kernel,
           for example: android12-5.10.66
+      custom:
+        required: true
+        type: boolean
+        description: >
+          Enable LXC, Docker
       kernelsu:
         required: true
         type: boolean
         description: >
-          Build kernel with KernelSU
+          Enable KernelSU
 
 jobs:
   build:
@@ -46,6 +51,7 @@ jobs:
         git clone https://github.com/TapetalArray/GKI-Custom.git gki-patch
 
     - name: Apply patches and configuration files
+      if: ${{ inputs.custom == true }}
       run: |
         cd $GITHUB_WORKSPACE
         cp ./gki-patch/config/gki_defconfig-android12-5.10 ./android-kernel/common/arch/arm64/configs/gki_defconfig
