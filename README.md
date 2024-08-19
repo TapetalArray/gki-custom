@@ -4,9 +4,9 @@ Enable LXC, Docker support for GKI Kernel, everything comes from [Common-Android
 
 # Build
 
-If you don't want to build it yourself, you can jump to the [actions](https://github.com/TapetalArray/GKI-Custom/actions) to download or run a new workflow
+If you don't want to build it yourself, you can jump to the [actions](https://github.com/TapetalArray/GKI-Custom/actions) to download or fork repo run a new workflow
 
-Sync the kernel source code, Build reference [KernelSU](https://kernelsu.org/guide/how-to-build.html)
+Sync the kernel source code, build reference [KernelSU](https://kernelsu.org/guide/how-to-build.html)
 
 ```bash
 mkdir android-kernel; cd android-kernel
@@ -34,7 +34,7 @@ Build
 LTO=thin BUILD_CONFIG=common/build.config.gki.aarch64 build/build.sh
 ```
 
-Create the img file, Download boot from [this](https://source.android.com/docs/core/architecture/kernel/gki-release-builds).
+Create the img file, Download boot from [gki-release-builds](https://source.android.com/docs/core/architecture/kernel/gki-release-builds).
 
 ```bash
 ./tools/mkbootimg/unpack_bootimg.py --boot_img path/to/img
