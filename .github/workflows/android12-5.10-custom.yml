@@ -8,13 +8,19 @@ on:
         type: string
         description: >
           Patch level of common kernel manifest,
-          for example: 2021-11
+          for example: 2024-05
+      os_version:
+        required: true
+        type: string
+        description: >
+          OS Version of boot image
+          for example: 12.0.0
       version_name:
         required: true
         type: string
         description: >
           With SUBLEVEL of kernel,
-          for example: android12-5.10.66
+          for example: android12-5.10.209
       custom:
         required: true
         type: boolean
@@ -86,11 +92,11 @@ jobs:
         echo "Unpack boot"
         ./tools/mkbootimg/unpack_bootimg.py --boot_img $GITHUB_WORKSPACE/boot*.img
         echo "Build boot.img"
-        ./tools/mkbootimg/mkbootimg.py --header_version 4 --kernel out/android12-5.10/dist/Image --ramdisk out/ramdisk --os_version 12.0.0 --os_patch_level ${{ inputs.os_patch_level }} -o $GITHUB_WORKSPACE/output/${{ inputs.version_name }}_${{ inputs.os_patch_level }}-boot.img
+        ./tools/mkbootimg/mkbootimg.py --header_version 4 --kernel out/android12-5.10/dist/Image --ramdisk out/ramdisk --os_version ${{ inputs.os_version }} --os_patch_level ${{ inputs.os_patch_level }} -o $GITHUB_WORKSPACE/output/${{ inputs.version_name }}_${{ inputs.os_patch_level }}-boot.img
         echo "Build boot-lz4.img"
-        ./tools/mkbootimg/mkbootimg.py --header_version 4 --kernel out/android12-5.10/dist/Image.lz4 --ramdisk out/ramdisk --os_version 12.0.0 --os_patch_level ${{ inputs.os_patch_level }} -o $GITHUB_WORKSPACE/output/${{ inputs.version_name }}_${{ inputs.os_patch_level }}-boot-lz4.img
+        ./tools/mkbootimg/mkbootimg.py --header_version 4 --kernel out/android12-5.10/dist/Image.lz4 --ramdisk out/ramdisk --os_version ${{ inputs.os_version }} --os_patch_level ${{ inputs.os_patch_level }} -o $GITHUB_WORKSPACE/output/${{ inputs.version_name }}_${{ inputs.os_patch_level }}-boot-lz4.img
         echo "Build boot-gz.img"
-        ./tools/mkbootimg/mkbootimg.py --header_version 4 --kernel $GITHUB_WORKSPACE/Image.gz --ramdisk out/ramdisk --os_version 12.0.0 --os_patch_level ${{ inputs.os_patch_level }} -o $GITHUB_WORKSPACE/output/${{ inputs.version_name }}_${{ inputs.os_patch_level }}-boot-gz.img
+        ./tools/mkbootimg/mkbootimg.py --header_version 4 --kernel $GITHUB_WORKSPACE/Image.gz --ramdisk out/ramdisk --os_version ${{ inputs.os_version }} --os_patch_level ${{ inputs.os_patch_level }} -o $GITHUB_WORKSPACE/output/${{ inputs.version_name }}_${{ inputs.os_patch_level }}-boot-gz.img
 
     - name: Upload Image and Image.gz and boot.img
       uses: actions/upload-artifact@v4
