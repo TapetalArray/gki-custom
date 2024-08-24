@@ -1,6 +1,6 @@
 # GKI Custom
 
-Enable LXC, Docker support for GKI Kernel, everything comes from [Common-Android-Kernel-Tree](https://github.com/lateautumn233/Common-Android-Kernel-Tree)
+Enable LXC, Docker support for GKI Kernel
 
 # Build
 
