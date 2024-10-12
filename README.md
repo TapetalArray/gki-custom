@@ -17,15 +17,15 @@ repo sync
 Clone this repo
 
 ```bash
-git clone https://github.com/TapetalArray/GKI-Custom
+git clone https://github.com/TapetalArray/gki-custom
 ```
 
 Apply patches and configuration files
 
 ```bash
-cp ./GKI-Custom/config/gki_defconfig-android12-5.10 ./android-kernel/common/arch/arm64/configs/gki_defconfig
+cp ./gki-custom/config/gki_defconfig-android12-5.10 ./android-kernel/common/arch/arm64/configs/gki_defconfig
 cd android-kernel/common
-git apply ../../GKI-Custom/patchs/*.patch
+git apply ../../gki-custom/patchs/*.patch
 cd ..
 BUILD_CONFIG=common/build.config.gki.aarch64 build/config.sh savedefconfig
 ```
