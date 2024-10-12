@@ -26,6 +26,8 @@ Apply patches and configuration files
 cp ./GKI-Custom/config/gki_defconfig-android12-5.10 ./android-kernel/common/arch/arm64/configs/gki_defconfig
 cd android-kernel/common
 git apply ../../GKI-Custom/patchs/*.patch
+cd ..
+BUILD_CONFIG=common/build.config.gki.aarch64 build/config.sh savedefconfig
 ```
 
 Build
